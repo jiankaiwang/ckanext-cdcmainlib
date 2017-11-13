@@ -4,6 +4,7 @@ import ckan.lib.helpers as h
 from py2psql import *
 import datetime
 import ckan.model as model
+import re
 
 # customized function
 # desc : return a string based on current language selected, english or chinese
@@ -86,7 +87,7 @@ def getPostRequestParamValue(getStr, getParaKey):
 #
 # desc : get psql configuration from production.ini
 #
-def getPSQLInfo(configName):
+def getPSQLInfo(configName, tablename):
     url = config.get(configName)
     pattern = re.compile('\S+://(\S+):(\S+)@(\S+):(\d+)/(\S+)')
     match = pattern.match(url)
@@ -94,7 +95,7 @@ def getPSQLInfo(configName):
         link = pattern.findall(url)[0]
         return {\
             'dbhost':link[2], 'dbport':str(link[3]), \
-            'dbname':link[4], 'dbtable':"download_summary", \
+            'dbname':link[4], 'dbtable':tablename, \
             'dbuser':link[0], 'dbpass':link[1]\
         }
     else:
@@ -102,7 +103,7 @@ def getPSQLInfo(configName):
         link = pattern.findall(url)[0]
         return {\
             'dbhost':link[2], 'dbport':str("5432"), \
-            'dbname':link[3], 'dbtable':"download_summary", \
+            'dbname':link[3], 'dbtable':tablename, \
             'dbuser':link[0], 'dbpass':link[1]\
         }
 
@@ -110,19 +111,19 @@ def getPSQLInfo(configName):
 # desc : get account info for account application
 #
 def getAccInfo(option, getReq):
-    psqlInfo = getPSQLInfo('ckan.cdcmainlib.psqlUrl')
+    psqlInfo = getPSQLInfo('ckan.cdcmainlib.psqlUrl','')
     if option == "fullName":
-        p2l = py2psql(psqlInfo['dbhost'], psqlInfo['dbport'], psqlInfo['dbname'], psqlInfo['dbtable'], psqlInfo['dbuser'], psqlInfo['dbpass'])
+        p2l = py2psql(psqlInfo['dbhost'], psqlInfo['dbport'], psqlInfo['dbname'], "public.user", psqlInfo['dbuser'], psqlInfo['dbpass'])
         data = p2l.select({"name" : getReq}, ["fullname"], asdict=True)
         return unicode(data[0]["fullname"], 'utf-8')
     elif option == "getDate":
         return str(datetime.datetime.now())[0:10]
     elif option == "email":
-        p2l = py2psql(psqlInfo['dbhost'], psqlInfo['dbport'], psqlInfo['dbname'], psqlInfo['dbtable'], psqlInfo['dbuser'], psqlInfo['dbpass'])
+        p2l = py2psql(psqlInfo['dbhost'], psqlInfo['dbport'], psqlInfo['dbname'], "public.user", psqlInfo['dbuser'], psqlInfo['dbpass'])
         data = p2l.select({"name" : getReq}, ["email"], asdict=True)
         return unicode(data[0]["email"], 'utf-8')
     elif option == "org":
-        p2l = py2psql(psqlInfo['dbhost'], psqlInfo['dbport'], psqlInfo['dbname'], psqlInfo['dbtable'], psqlInfo['dbuser'], psqlInfo['dbpass'])
+        p2l = py2psql(psqlInfo['dbhost'], psqlInfo['dbport'], psqlInfo['dbname'], "public.group", psqlInfo['dbuser'], psqlInfo['dbpass'])
         data = p2l.select({"name": getReq},["title"],asdict=True)
         return unicode(data[0]["title"], 'utf-8')
 
@@ -131,7 +132,7 @@ def getAccInfo(option, getReq):
 # retn : list contains tuple
 #
 def getReq2OrgList(getOrg, getCrtUser):
-    psqlInfo = getPSQLInfo('ckan.cdcmainlib.psqlUrl')
+    psqlInfo = getPSQLInfo('ckan.cdcmainlib.psqlUrl','public.user')
     p2l = py2psql(psqlInfo['dbhost'], psqlInfo['dbport'], psqlInfo['dbname'], psqlInfo['dbtable'], psqlInfo['dbuser'], psqlInfo['dbpass'])
     data = p2l.select({"organ":getOrg["name"]},["id","name","fullname","email"],asdict=True)
 
@@ -150,7 +151,7 @@ def getReq2OrgList(getOrg, getCrtUser):
 # desc : get current user state
 #
 def getUserState(getID):
-    psqlInfo = getPSQLInfo('ckan.cdcmainlib.psqlUrl')
+    psqlInfo = getPSQLInfo('ckan.cdcmainlib.psqlUrl','public.user')
     p2l = py2psql(psqlInfo['dbhost'], psqlInfo['dbport'], psqlInfo['dbname'], psqlInfo['dbtable'], psqlInfo['dbuser'], psqlInfo['dbpass'])
     data = p2l.select({"id":getID},["state"],asdict=True)
     return data[0]["state"]
@@ -159,7 +160,7 @@ def getUserState(getID):
 # desc : set current user state
 #
 def setUserState(getID,setState):
-    psqlInfo = getPSQLInfo('ckan.cdcmainlib.psqlUrl')
+    psqlInfo = getPSQLInfo('ckan.cdcmainlib.psqlUrl','public.user')
     p2l = py2psql(psqlInfo['dbhost'], psqlInfo['dbport'], psqlInfo['dbname'], psqlInfo['dbtable'], psqlInfo['dbuser'], psqlInfo['dbpass'])
     return p2l.update({"state":setState},{"id":getID})
 
@@ -167,7 +168,7 @@ def setUserState(getID,setState):
 # desc : get user organ
 #
 def getUserOrgan(getID):
-    psqlInfo = getPSQLInfo('ckan.cdcmainlib.psqlUrl')
+    psqlInfo = getPSQLInfo('ckan.cdcmainlib.psqlUrl','public.user')
     p2l = py2psql(psqlInfo['dbhost'], psqlInfo['dbport'], psqlInfo['dbname'], psqlInfo['dbtable'], psqlInfo['dbuser'], psqlInfo['dbpass'])
     data = p2l.select({"id":getID},["organ"],asdict=True)
     return data[0]["organ"]
