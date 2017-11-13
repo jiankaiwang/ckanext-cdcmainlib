@@ -17,8 +17,8 @@ Requirements
 
 * Developed on CKAN 2.5.x
 * Require external packages
-	* psycopg2 : [https://pypi.python.org/pypi/psycopg2](https://pypi.python.org/pypi/psycopg2)
-	* py2psql : [https://github.com/jiankaiwang/seed/blob/master/python/py2psql.py](https://github.com/jiankaiwang/seed/blob/master/python/py2psql.py)
+	* psycopg2 : https://pypi.python.org/pypi/psycopg2
+	* py2psql : https://github.com/jiankaiwang/seed/blob/master/python/py2psql.py
 
 ------------
 Installation
@@ -30,9 +30,10 @@ To install ckanext-cdcmainlib:
 
      . /usr/lib/ckan/default/bin/activate
 
-2. Clone the ckanext-cdcmainlib from github.
+2. Clone the ckanext-cdcmainlib from github, for example::
  
      cd /usr/lib/ckan/default/src/
+
      git clone https://github.com/jiankaiwang/ckanext-cdcmainlib.git
 
 3. Install the ckanext-cdcmainlib Python package into your virtual environment::
@@ -64,7 +65,7 @@ Document any optional config settings here. For example::
 
     ckan.plugins = cdcmainlib
 
-postgresql database to record downloading information
+postgresql database to record downloading information::
 
     ckan.cdcmainlib.psqlUrl = postgresql://(dbuser):(dbpass)@(dbhost)/(dbname)
 
