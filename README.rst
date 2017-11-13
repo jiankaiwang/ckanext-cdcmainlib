@@ -61,11 +61,11 @@ To install ckanext-cdcmainlib:
 Config Settings
 ---------------
 
-Document any optional config settings here. For example::
+Make sure adding ``cdcmainlib`` to the ``ckan.plugins``. For example::
 
     ckan.plugins = cdcmainlib
 
-postgresql database to record downloading information::
+postgresql url to query the database information::
 
     ckan.cdcmainlib.psqlUrl = postgresql://(dbuser):(dbpass)@(dbhost)/(dbname)
 
