@@ -5,53 +5,24 @@
 .. image:: https://travis-ci.org/jiankaiwang/ckanext-cdcmainlib.svg?branch=master
     :target: https://travis-ci.org/jiankaiwang/ckanext-cdcmainlib
 
-.. image:: https://coveralls.io/repos/jiankaiwang/ckanext-cdcmainlib/badge.svg
-  :target: https://coveralls.io/r/jiankaiwang/ckanext-cdcmainlib
-
-.. image:: https://pypip.in/download/ckanext-cdcmainlib/badge.svg
-    :target: https://pypi.python.org/pypi//ckanext-cdcmainlib/
-    :alt: Downloads
-
-.. image:: https://pypip.in/version/ckanext-cdcmainlib/badge.svg
-    :target: https://pypi.python.org/pypi/ckanext-cdcmainlib/
-    :alt: Latest Version
-
-.. image:: https://pypip.in/py_versions/ckanext-cdcmainlib/badge.svg
-    :target: https://pypi.python.org/pypi/ckanext-cdcmainlib/
-    :alt: Supported Python versions
-
-.. image:: https://pypip.in/status/ckanext-cdcmainlib/badge.svg
-    :target: https://pypi.python.org/pypi/ckanext-cdcmainlib/
-    :alt: Development Status
-
-.. image:: https://pypip.in/license/ckanext-cdcmainlib/badge.svg
-    :target: https://pypi.python.org/pypi/ckanext-cdcmainlib/
-    :alt: License
-
 =============
 ckanext-cdcmainlib
 =============
 
-.. Put a description of your extension here:
-   What does it do? What features does it have?
-   Consider including some screenshots or embedding a video!
-
+The extension is the base library for all ckanexts on TCDC open data portal.
 
 ------------
 Requirements
 ------------
 
-For example, you might want to mention here which versions of CKAN this
-extension works with.
-
+* Developed on CKAN 2.5.x
+* Require external packages
+	* psycopg2 : https://pypi.python.org/pypi/psycopg2
+	* py2psql : https://github.com/jiankaiwang/seed/blob/master/python/py2psql.py
 
 ------------
 Installation
 ------------
-
-.. Add any additional install steps to the list below.
-   For example installing any non-Python dependencies or adding any required
-   config settings.
 
 To install ckanext-cdcmainlib:
 
@@ -59,29 +30,46 @@ To install ckanext-cdcmainlib:
 
      . /usr/lib/ckan/default/bin/activate
 
-2. Install the ckanext-cdcmainlib Python package into your virtual environment::
+2. Clone the ckanext-cdcmainlib from github, for example::
+ 
+     cd /usr/lib/ckan/default/src/
 
-     pip install ckanext-cdcmainlib
+     git clone https://github.com/jiankaiwang/ckanext-cdcmainlib.git
 
-3. Add ``cdcmainlib`` to the ``ckan.plugins`` setting in your CKAN
+3. Install the ckanext-cdcmainlib Python package into your virtual environment::
+
+     cd /usr/lib/ckan/default/src/ckanext-cdcmainlib     
+
+     pip install .
+
+4. Add ``cdcmainlib`` to the ``ckan.plugins`` setting in your CKAN
    config file (by default the config file is located at
    ``/etc/ckan/default/production.ini``).
 
-4. Restart CKAN. For example if you've deployed CKAN with Apache on Ubuntu::
+5. Restart CKAN. For example if you've deployed CKAN with Apache on Ubuntu::
 
      sudo service apache2 reload
+
+   If you've deployed CKAN with uwsgi::
+
+     uwsgi --ini-paste /etc/ckan/default/production.ini
+
+   If you've create a ckan.service::
+ 
+     sudo systemctl restart ckan.service
 
 
 ---------------
 Config Settings
 ---------------
 
-Document any optional config settings here. For example::
+Make sure adding ``cdcmainlib`` to the ``ckan.plugins``. For example::
 
-    # The minimum number of hours to wait before re-checking a resource
-    # (optional, default: 24).
-    ckanext.cdcmainlib.some_setting = some_default_value
+    ckan.plugins = cdcmainlib
 
+postgresql url to query the database information::
+
+    ckan.cdcmainlib.psqlUrl = postgresql://(dbuser):(dbpass)@(dbhost)/(dbname)
 
 ------------------------
 Development Installation
@@ -96,55 +84,9 @@ do::
     pip install -r dev-requirements.txt
 
 
------------------
-Running the Tests
------------------
-
-To run the tests, do::
-
-    nosetests --nologcapture --with-pylons=test.ini
-
-To run the tests and produce a coverage report, first make sure you have
-coverage installed in your virtualenv (``pip install coverage``) then run::
-
-    nosetests --nologcapture --with-pylons=test.ini --with-coverage --cover-package=ckanext.cdcmainlib --cover-inclusive --cover-erase --cover-tests
-
-
----------------------------------
-Registering ckanext-cdcmainlib on PyPI
----------------------------------
-
-ckanext-cdcmainlib should be availabe on PyPI as
-https://pypi.python.org/pypi/ckanext-cdcmainlib. If that link doesn't work, then
-you can register the project on PyPI for the first time by following these
-steps:
-
-1. Create a source distribution of the project::
-
-     python setup.py sdist
-
-2. Register the project::
-
-     python setup.py register
-
-3. Upload the source distribution to PyPI::
-
-     python setup.py sdist upload
-
-4. Tag the first release of the project on GitHub with the version number from
-   the ``setup.py`` file. For example if the version number in ``setup.py`` is
-   0.0.1 then do::
-
-       git tag 0.0.1
-       git push --tags
-
-
 ----------------------------------------
 Releasing a New Version of ckanext-cdcmainlib
 ----------------------------------------
-
-ckanext-cdcmainlib is availabe on PyPI as https://pypi.python.org/pypi/ckanext-cdcmainlib.
-To publish a new version to PyPI follow these steps:
 
 1. Update the version number in the ``setup.py`` file.
    See `PEP 440 <http://legacy.python.org/dev/peps/pep-0440/#public-version-identifiers>`_
