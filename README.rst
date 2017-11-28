@@ -38,6 +38,8 @@ To install ckanext-cdcmainlib:
 
 3. Install the ckanext-cdcmainlib Python package into your virtual environment::
 
+     cd /usr/lib/ckan/default/src/ckanext-cdcmainlib     
+
      pip install .
 
 4. Add ``cdcmainlib`` to the ``ckan.plugins`` setting in your CKAN
